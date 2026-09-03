@@ -1,0 +1,6 @@
+interface:
+  display_name: "AI Pattern"
+  short_description: "快速、只读审查英文学术稿，并可按需启用完整深度模式"
+  default_prompt: "Use $ai-pattern to run a fast, read-only audit of this English academic manuscript and write a compact versioned Markdown report."
+policy:
+  allow_implicit_invocation: false

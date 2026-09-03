@@ -1,0 +1,20 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# User local audit outputs & custom profiles
+author_profile.yaml
+*-ai-pattern-report*.md
+*-ai-pattern-report*.html
+*-extract.json
+*-candidates.json
+*-candidates.md
+temp_*
+
+# OS & Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

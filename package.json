@@ -1,0 +1,31 @@
+{
+  "name": "academic-ai-pattern",
+  "version": "0.9.1",
+  "description": "Academic humanizer & non-destructive de-ai writing auditor with Author Profile protection for empirical papers. 具备作者指纹保护的非侵入式学术降AI、去AI审查工具。",
+  "main": "SKILL.md",
+  "keywords": [
+    "humanizer",
+    "academic-humanizer",
+    "author-profile",
+    "de-ai",
+    "ai-writing",
+    "anti-ai-slop",
+    "anti-ai-writing",
+    "remove-ai",
+    "降ai",
+    "去ai",
+    "学术论文",
+    "peer-review",
+    "paper-writing",
+    "paper-audit",
+    "claude-code",
+    "codex",
+    "antigravity"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kyrieove/academic-ai-pattern.git"
+  },
+  "author": "kyrieove",
+  "license": "MIT"
+}

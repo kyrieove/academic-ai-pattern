@@ -1,0 +1,64 @@
+# ==============================================================================
+# academic-ai-pattern: Author Profile Template (作者个人写作模型配置)
+# ==============================================================================
+#
+# 该配置文件对应 ai_pattern.md 中的「C 类 — 作者指纹」约束。
+# A 类（学术真实性通用约束）与 B 类（学科通行惯例）为系统默认内置铁律；
+# C 类指纹允许作者根据个人研究风格、领域期刊习惯进行差异化定制。
+#
+# 使用方法：
+# 1. 复制本文件并重命名为 `author_profile.yaml`；
+# 2. 根据你的写作习惯修改对应选项；
+# 3. Agent 审计时将自动加载你的个人指纹，避免纯个人文风被误判为「需修改」。
+# ==============================================================================
+
+version: "1.0"
+
+# 1. 语言与拼写规范 (Spelling & Language Conventions)
+language:
+  # 拼写体系: american (美式, 默认) | british (英式)
+  spelling_standard: "american"
+  # 是否允许正文使用第一人称 (I / We)
+  # true: 允许在引言路线图、研究者贡献中使用第一人称
+  # false: 严格第三人称/被动表述 (传统实证学科)
+  allow_first_person: false
+
+# 2. 句法与节奏偏好 (Syntax & Rhythm Preferences)
+syntax:
+  # 允许长句比例 (超过 35 词的复杂从句比例，默认 12% 容忍度)
+  long_sentence_tolerance: 0.12
+  # 分号使用偏好: preserve (保留作者分号习惯) | discourage (尽量拆分)
+  semicolon_handling: "preserve"
+  # 修辞问句策略:
+  # disallow (全面禁止修辞问句，仅允许研究问题列表或标题回扣)
+  # allow (允许章节过渡处使用设问引导)
+  rhetorical_questions: "disallow"
+
+# 3. 论证与引用偏好 (Argumentation & Citation Style)
+argumentation:
+  # 叙述式引用 (Narrative Citations, 例如: "Smith et al. (2023) argued that..."):
+  # allow (保留叙述式主谓句，禁止机械压平成无主语被动句)
+  # minimize (偏好括号引用，将研究者放在括号内)
+  narrative_citations: "allow"
+  
+  # 对立结构修饰 (Contrasting Structures):
+  # delete_phantom_contrasts: true (对 "not X but Y", "rather than..." 等缺乏来源支撑的幽灵对立直接删减)
+  delete_phantom_contrasts: true
+
+  # 列表与并列结构处置 (List & Enumeration):
+  # prune_to_essential: true (将无明显证据支撑的多项枚举砍到仅保留承载核心论证的 1-2 项)
+  prune_to_essential: true
+
+  # 认识强度偏好 (Epistemic Stance & Hedging):
+  # balanced (适度对冲，不过弱也不过强)
+  # strong (偏好直接断言，减少 may/suggest)
+  # cautious (极度谨慎，要求严格的条件限定)
+  epistemic_stance: "balanced"
+
+# 4. 学科特定保护白名单 (Disciplinary Specific Whitelist)
+# 在此列出的术语或缩写将强制视为受保护构念，不触发近义词漂移或造作比喻判定
+terminology_whitelist:
+  - "response latency"
+  - "processing delay"
+  - "crossmodal integration"
+  - "sensory redundancy"
