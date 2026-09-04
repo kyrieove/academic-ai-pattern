@@ -90,6 +90,9 @@ def main() -> int:
         verdict_match = re.search(r"\*\*裁决\*\*：\s*(\S+)", chunk)
         if not verdict_match or verdict_match.group(1) not in VERDICTS:
             fail(errors, f"{finding_id}: invalid verdict")
+        # A rewrite is the only new text this tool emits; it needs its own audit line.
+        if "**候选改法**" in chunk and "**守恒核对**" not in chunk:
+            fail(errors, f"{finding_id}: 候选改法 present without 守恒核对")
     if len(ids) != len(set(ids)):
         fail(errors, "duplicate finding IDs")
 
@@ -119,6 +122,13 @@ def main() -> int:
             normalized = quote.rstrip()
             if not any(normalized in known_blocks.get(block_id, "") for block_id in positions):
                 fail(errors, f"{finding_id}: quote not found in its referenced blocks: {normalized[:80]}")
+        # Numbers are the cheapest thing to fabricate and the most expensive to miss.
+        rewrite = re.search(r"(?m)^\*\*候选改法\*\*：(.*?)(?=\n\*\*|\Z)", chunk, re.S)
+        if rewrite:
+            source_text = " ".join(known_blocks.get(block_id, "") for block_id in positions)
+            for number in sorted(set(re.findall(r"\d+(?:\.\d+)?", rewrite.group(1)))):
+                if number not in source_text:
+                    fail(errors, f"{finding_id}: 候选改法 introduces number absent from its blocks: {number}")
 
     expected_hash = str(extracted.get("source_sha256", "")).lower()
     if args.source:
@@ -134,6 +144,7 @@ def main() -> int:
     result = {
         "ok": not errors,
         "findings": len(ids),
+        "rewrites": report.count("**候选改法**"),
         "quoted_fragments": len(re.findall(r"(?m)^> ", report)),
         "errors": errors,
     }
