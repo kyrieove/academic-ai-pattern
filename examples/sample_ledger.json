@@ -1,0 +1,58 @@
+{
+  "source_sha256": "992b4410a46eae09454a0dfd778ad66095807846c34399b3bd8ad389be58d644",
+  "semantic_review": {
+    "S1": true,
+    "S13": true
+  },
+  "semantic_candidates": [],
+  "decisions": [
+    {
+      "candidate_id": "S1-81f15b50af4b",
+      "reason": "四个反馈条件是本研究的实验设计；删除任一条件会改变摘要报告的设计。",
+      "verdict": "受保护",
+      "finding_id": null
+    },
+    {
+      "candidate_id": "S1-fd2a12948f53",
+      "reason": "visual、auditory、tactile 指明反馈模态；删除一项会改变本句的分配对象。",
+      "verdict": "受保护",
+      "finding_id": null
+    },
+    {
+      "candidate_id": "S1-8add50eecbe8",
+      "reason": "突出性、任务表现和满意度是不同理由；正文没有说明哪一项可删，不能按项数裁剪。",
+      "verdict": "待作者判断",
+      "finding_id": null
+    },
+    {
+      "candidate_id": "S1-f6ca695a5eb9",
+      "reason": "organize、coordinate、prioritize、optimize 没有分别定义其作用；该句也未说明这些能力为何构成所称的 gap。",
+      "verdict": "需修改",
+      "finding_id": "AP-S01-001"
+    },
+    {
+      "candidate_id": "S1-3d57da7d2445",
+      "reason": "句中列的是两个因变量和两个分析因素，均为复现 ANOVA 所需信息；不是动作堆叠。",
+      "verdict": "受保护",
+      "finding_id": null
+    },
+    {
+      "candidate_id": "S1-2a267de05974",
+      "reason": "四项未来措施没有分别对应生态效度的哪项限制，不能判断各项为何必要；需作者补充对应关系。",
+      "verdict": "需修改",
+      "finding_id": "AP-S13-001"
+    },
+    {
+      "candidate_id": "S13-10972efcc8ca",
+      "reason": "本句明确指定 cognitive load 与 human-computer interaction，并给出选题理由；开头形式本身不证明空模板。",
+      "verdict": "受保护",
+      "finding_id": null
+    },
+    {
+      "candidate_id": "S13-9573b498b26a",
+      "reason": "生态效度是本句目标，但没有连接本文具体任务限制与所列后续措施，未来计划的依据仍缺失。",
+      "verdict": "需修改",
+      "finding_id": "AP-S13-001"
+    }
+  ]
+}

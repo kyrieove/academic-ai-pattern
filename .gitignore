@@ -18,3 +18,7 @@ temp_*
 Thumbs.db
 .vscode/
 .idea/
+
+# Corpus for /distill: published papers are copyrighted, keep them local
+corpus/*/raw/
+corpus/*/extract/

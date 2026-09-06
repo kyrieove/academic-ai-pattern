@@ -21,12 +21,11 @@ language:
   # 是否允许正文使用第一人称 (I / We)
   # true: 允许在引言路线图、研究者贡献中使用第一人称
   # false: 严格第三人称/被动表述 (传统实证学科)
-  allow_first_person: false
+  allow_first_person: true
 
 # 2. 句法与节奏偏好 (Syntax & Rhythm Preferences)
 syntax:
-  # 允许长句比例 (超过 35 词的复杂从句比例，默认 12% 容忍度)
-  long_sentence_tolerance: 0.12
+  # 句长分布仅作描述，不设默认比例阈值，不单独产生 finding。
   # 分号使用偏好: preserve (保留作者分号习惯) | discourage (尽量拆分)
   semicolon_handling: "preserve"
   # 修辞问句策略:
@@ -51,12 +50,12 @@ argumentation:
 
   # 认识强度偏好 (Epistemic Stance & Hedging):
   # balanced (适度对冲，不过弱也不过强)
-  # strong (偏好直接断言，减少 may/suggest)
+  # strong (在证据允许时偏好直接表述，不授权删除必要限定)
   # cautious (极度谨慎，要求严格的条件限定)
   epistemic_stance: "balanced"
 
 # 4. 学科特定保护白名单 (Disciplinary Specific Whitelist)
-# 在此列出的术语或缩写将强制视为受保护构念，不触发近义词漂移或造作比喻判定
+# 白名单只保护名称本身，不豁免错误定义、对象漂移或证据失配；术语关系仍需审查
 terminology_whitelist:
   - "response latency"
   - "processing delay"

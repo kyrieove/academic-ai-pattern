@@ -1,0 +1,157 @@
+{
+  "schema_version": 2,
+  "source_name": "sample_paper.md",
+  "source_sha256": "992b4410a46eae09454a0dfd778ad66095807846c34399b3bd8ad389be58d644",
+  "scope": "author body prose only; front matter, locked material and trailing sections excluded",
+  "scanned_blocks": 13,
+  "scanned_block_ids": [
+    "markdown-p0003",
+    "markdown-p0005",
+    "markdown-p0006",
+    "markdown-p0007",
+    "markdown-p0008",
+    "markdown-p0011",
+    "markdown-p0013",
+    "markdown-p0014",
+    "markdown-p0016",
+    "markdown-p0017",
+    "markdown-p0018",
+    "markdown-p0020",
+    "markdown-p0021"
+  ],
+  "input_blocks": 23,
+  "reviewed_rules": [
+    "S1",
+    "S13"
+  ],
+  "warnings": [
+    "Lexical signals are not exhaustive; each reviewed rule needs a semantic review."
+  ],
+  "excluded_blocks": [
+    {
+      "id": "markdown-p0001",
+      "reason": "heading"
+    },
+    {
+      "id": "markdown-p0002",
+      "reason": "heading"
+    },
+    {
+      "id": "markdown-p0004",
+      "reason": "heading"
+    },
+    {
+      "id": "markdown-p0009",
+      "reason": "heading"
+    },
+    {
+      "id": "markdown-p0010",
+      "reason": "heading"
+    },
+    {
+      "id": "markdown-p0012",
+      "reason": "heading"
+    },
+    {
+      "id": "markdown-p0015",
+      "reason": "heading"
+    },
+    {
+      "id": "markdown-p0019",
+      "reason": "heading"
+    },
+    {
+      "id": "markdown-p0022",
+      "reason": "trailing-section"
+    },
+    {
+      "id": "markdown-p0023",
+      "reason": "trailing-section"
+    }
+  ],
+  "candidate_count": 8,
+  "counts": {
+    "S1": 6,
+    "S2": 0,
+    "S3": 0,
+    "S4": 0,
+    "S5": 0,
+    "S6": 0,
+    "S7": 0,
+    "S8": 0,
+    "S9": 0,
+    "S10": 0,
+    "S11": 0,
+    "S12": 0,
+    "S13": 2,
+    "S14": 0,
+    "S15": 0,
+    "S16": 0
+  },
+  "candidates": [
+    {
+      "id": "S1-81f15b50af4b",
+      "origin": "scanner",
+      "rule": "S1",
+      "block_id": "markdown-p0003",
+      "text": "In this study, 48 adult participants completed a supervisory control task under four sensory feedback conditions: visual-only, visual-auditory, visual-haptic, and trimodal feedback.",
+      "signal": "comma-list:4"
+    },
+    {
+      "id": "S1-fd2a12948f53",
+      "origin": "scanner",
+      "rule": "S1",
+      "block_id": "markdown-p0005",
+      "text": "By distributing feedback across visual, auditory, and tactile modalities, system designers aim to prevent sensory bottlenecks and optimize human performance in high-stakes environments.",
+      "signal": "comma-list:3"
+    },
+    {
+      "id": "S1-8add50eecbe8",
+      "origin": "scanner",
+      "rule": "S1",
+      "block_id": "markdown-p0006",
+      "text": "The present study focuses on cognitive load in human-computer interaction for three reasons: cognitive load is prominent in interface engineering, it has been linked to task performance, and it is crucial to user satisfaction.",
+      "signal": "coordinated-actions"
+    },
+    {
+      "id": "S1-f6ca695a5eb9",
+      "origin": "scanner",
+      "rule": "S1",
+      "block_id": "markdown-p0007",
+      "text": "However, existing research exhibits a critical gap: multimodal interfaces can organize, coordinate, prioritize, and optimize concurrent feedback channels.",
+      "signal": "comma-list:4"
+    },
+    {
+      "id": "S1-3d57da7d2445",
+      "origin": "scanner",
+      "rule": "S1",
+      "block_id": "markdown-p0016",
+      "text": "Mean response times and NASA-TLX scores were analyzed using repeated-measures ANOVAs with Feedback Condition as a within-subjects factor and APC Group as a between-subjects factor.",
+      "signal": "coordinated-actions"
+    },
+    {
+      "id": "S1-2a267de05974",
+      "origin": "scanner",
+      "rule": "S1",
+      "block_id": "markdown-p0021",
+      "text": "Future research should combine multiple interactive paradigms, eye tracking, neuroimaging, and diverse demographic cohorts to examine ecological validity.",
+      "signal": "comma-list:3"
+    },
+    {
+      "id": "S13-10972efcc8ca",
+      "origin": "scanner",
+      "rule": "S13",
+      "block_id": "markdown-p0006",
+      "text": "The present study focuses on cognitive load in human-computer interaction for three reasons: cognitive load is prominent in interface engineering, it has been linked to task performance, and it is crucial to user satisfaction.",
+      "signal": "portable-scaffold"
+    },
+    {
+      "id": "S13-9573b498b26a",
+      "origin": "scanner",
+      "rule": "S13",
+      "block_id": "markdown-p0021",
+      "text": "Future research should combine multiple interactive paradigms, eye tracking, neuroimaging, and diverse demographic cohorts to examine ecological validity.",
+      "signal": "portable-scaffold"
+    }
+  ]
+}

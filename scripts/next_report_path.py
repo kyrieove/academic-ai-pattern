@@ -8,14 +8,14 @@ from pathlib import Path
 
 
 def next_report_path(source: Path) -> Path:
-    base = source.with_name(f"{source.stem}-ai-pattern-report.md")
-    if not base.exists():
-        return base
-    version = 2
+    version = 1
     while True:
-        candidate = source.with_name(f"{source.stem}-ai-pattern-report-v{version}.md")
-        if not candidate.exists():
-            return candidate
+        suffix = "" if version == 1 else f"-v{version}"
+        companions = [source.with_name(f"{source.stem}-ai-pattern-{kind}{suffix}.{extension}")
+                      for kind, extension in (("report", "md"), ("ledger", "json"),
+                                              ("ledger", "md"), ("candidates", "json"))]
+        if not any(path.exists() for path in companions):
+            return companions[0]
         version += 1
 
 

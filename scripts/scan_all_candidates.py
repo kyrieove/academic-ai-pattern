@@ -8,6 +8,7 @@ make full-audit recall observable instead of allowing an unsupported zero count.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 from collections import defaultdict
@@ -31,8 +32,11 @@ SECTION_NAME = (
 )
 TRAILING_SECTION = re.compile(rf"^#{{1,6}}\s*[\d.]*\s*{SECTION_NAME}\b", re.I)
 BARE_TRAILING = re.compile(rf"^[\d.\s]*{SECTION_NAME}\s*[:：]?$", re.I)
-# A standalone line short enough to be a heading and without sentence punctuation.
-BARE_HEADING = re.compile(r"^[^.!?。！？]{1,48}$")
+# Only recognized section names are inferred as bare headings; short prose is kept.
+BARE_HEADING = re.compile(
+    rf"^(?:\d+(?:\.\d+)*\.?\s+)?(?:abstract|introduction|background|methods?|"
+    rf"methodology|results|discussion|conclusions?|{SECTION_NAME})\s*[:：]?$", re.I
+)
 # A front-matter block: most of its lines are "Label: value" pairs (cover page,
 # title block, submission metadata).  These are not author prose.
 METADATA_LINE = re.compile(r"^\s*(?:\*\*|__)?[^:：\n]{1,40}(?:\*\*|__)?\s*[:：]\s*\S")
@@ -51,11 +55,13 @@ def author_prose(items: list[dict]) -> tuple[list[tuple[str, str]], list[dict]]:
     kept: list[tuple[str, str]] = []
     dropped: list[dict] = []
     trailing = False
-    started = False
     for item in items:
         block_id = str(item.get("id"))
         text = str(item.get("text", ""))
         stripped = " ".join(text.split())
+        if item.get("locked"):
+            dropped.append({"id": block_id, "reason": "locked-material"})
+            continue
         heading = item.get("kind") == "heading" or (
             BARE_HEADING.match(stripped) and len(stripped.split()) <= 8
         )
@@ -65,18 +71,13 @@ def author_prose(items: list[dict]) -> tuple[list[tuple[str, str]], list[dict]]:
         if trailing:
             dropped.append({"id": block_id, "reason": "trailing-section"})
             continue
-        if item.get("locked"):
-            dropped.append({"id": block_id, "reason": "locked-material"})
-            continue
         if not stripped:
             dropped.append({"id": block_id, "reason": "empty"})
             continue
         if heading:
-            # The first heading ends the title page; the heading itself is chrome.
-            started = True
             dropped.append({"id": block_id, "reason": "heading"})
             continue
-        if not started or is_front_matter(text):
+        if not kept and is_front_matter(text):
             dropped.append({"id": block_id, "reason": "front-matter"})
             continue
         if item.get("kind") != "paragraph":
@@ -98,17 +99,12 @@ def add(rows: list[dict], seen: set[tuple], rule: str, block_id: str, text: str,
     key = (rule, block_id, text)
     if key not in seen:
         seen.add(key)
-        rows.append({"rule": rule, "block_id": block_id, "text": text, "signal": signal})
+        fingerprint = hashlib.sha256(json.dumps(key, ensure_ascii=False).encode("utf-8")).hexdigest()[:12]
+        rows.append({"id": f"{rule}-{fingerprint}", "origin": "scanner", "rule": rule,
+                     "block_id": block_id, "text": text, "signal": signal})
 
 
-def main() -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("extract_json", type=Path)
-    parser.add_argument("--output", type=Path)
-    parser.add_argument("--markdown", type=Path, help="Optional human-readable candidate ledger")
-    args = parser.parse_args()
-
-    extracted = json.loads(args.extract_json.read_text(encoding="utf-8"))
+def generate_inventory(extracted: dict, reviewed_rules: list[str] | None = None) -> dict:
     blocks, excluded = author_prose(extracted.get("blocks", []))
 
     rows: list[dict] = []
@@ -244,19 +240,42 @@ def main() -> int:
                     break
 
     rows.sort(key=lambda row: (int(row["rule"][1:]), row["block_id"], row["text"]))
+    reviewed_rules = reviewed_rules or [f"S{i}" for i in range(1, 17)]
+    rows = [row for row in rows if row["rule"] in reviewed_rules]
     counts: dict[str, int] = defaultdict(int)
     for row in rows:
         counts[row["rule"]] += 1
     result = {
+        "schema_version": 2,
         "source_name": extracted.get("source_name"),
         "source_sha256": extracted.get("source_sha256"),
         "scope": "author body prose only; front matter, locked material and trailing sections excluded",
         "scanned_blocks": len(blocks),
+        "scanned_block_ids": [block_id for block_id, _ in blocks],
+        "input_blocks": len(extracted.get("blocks", [])),
+        "reviewed_rules": reviewed_rules,
+        "warnings": ([] if blocks else ["No author prose scanned; review cannot be completed."])
+                    + ["Lexical signals are not exhaustive; each reviewed rule needs a semantic review."],
         "excluded_blocks": excluded,
         "candidate_count": len(rows),
         "counts": {f"S{number}": counts.get(f"S{number}", 0) for number in range(1, 17)},
         "candidates": rows,
     }
+    return result
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("extract_json", type=Path)
+    parser.add_argument("--output", "--json", type=Path)
+    parser.add_argument("--rules", nargs="+", choices=[f"S{i}" for i in range(1, 17)],
+                        help="Rules included in a focused review; default: all")
+    parser.add_argument("--markdown", type=Path, help="Optional human-readable candidate ledger")
+    args = parser.parse_args()
+
+    extracted = json.loads(args.extract_json.read_text(encoding="utf-8"))
+    result = generate_inventory(extracted, args.rules)
+    rows = result["candidates"]
     rendered = json.dumps(result, ensure_ascii=False, indent=2)
     if args.output:
         args.output.write_text(rendered + "\n", encoding="utf-8")
@@ -282,19 +301,17 @@ def main() -> int:
         for number in range(1, 17):
             rule = f"S{number}"
             lines.extend(["", f"## {rule}", ""])
-            index = 0
             for row in rows:
                 if row["rule"] != rule:
                     continue
-                index += 1
                 safe = row["text"].replace("\n", " ").replace("|", "\\|")
-                lines.append(f"### RAW-{rule}-{index:03d}")
+                lines.append(f"### {row['id']}")
                 lines.append("")
                 lines.append(f"- 位置：`{row['block_id']}`")
                 lines.append(f"- 信号：`{row['signal']}`")
                 lines.append(f"- 原文：{safe}")
         args.markdown.write_text("\n".join(lines) + "\n", encoding="utf-8")
-    return 0
+    return 0 if result["scanned_blocks"] else 1
 
 
 if __name__ == "__main__":

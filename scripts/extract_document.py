@@ -213,6 +213,10 @@ def extract_markdown(path: Path) -> tuple[list[dict[str, Any]], list[str]]:
             continue
         if in_fence:
             fence_lines.append(line)
+        elif re.match(r"^ {0,3}#{1,6}(?:\s|$)", line):
+            emit_buffer()
+            buffer.append(line)
+            emit_buffer()
         elif not line.strip():
             emit_buffer()
         else:
