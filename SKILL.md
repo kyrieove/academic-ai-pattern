@@ -45,9 +45,9 @@ Audit the academic manuscript supplied with `/academic-ai-pattern` (or `/ai-patt
 1. [references/quick-rules.md](references/quick-rules.md) — 默认操作规则与保护条件。
 2. [references/report-schema.md](references/report-schema.md) — 报告结构、ID、引文和验证要求。
 
-仅在深度审查、快速规则不能解决的争议裁决，或用户明确要求使用个人作者模型时，再完整读取 [ai_pattern.md](ai_pattern.md)。若工作区根目录下存在 [author_profile.yaml](author_profile.template.yaml)，加载其中的 C 类个人指纹偏好；规则实质冲突时，`ai_pattern.md` 优先；报告形式由 schema 控制。
+仅在深度审查、快速规则不能解决的争议裁决，或用户明确要求使用个人作者模型时，再完整读取大文件 [ai_pattern.md](ai_pattern.md)。若工作区根目录下存在 [author_profile.yaml](author_profile.template.yaml)，加载其中的 C 类个人指纹偏好；规则实质冲突时，`ai_pattern.md` 优先；报告形式由 schema 控制。
 
-若存在 `corpus/BASELINE.md`，加载它并核对适用范围是否覆盖本稿的 section 与研究设计。不存在或不覆盖时按无基线审查，并在报告的作者模型字段写明。基线只提供保护证据：不新增候选、不新增规则、不单独产生 finding，语料里查不到也不得据此升级为 `需修改`。
+若 skill 目录下存在 `corpus/BASELINE.md`（`/distill` 的默认产物位置，见 [corpus/README.md](corpus/README.md)），加载它并核对适用范围是否覆盖本稿的 section 与研究设计。不存在或不覆盖时按无基线审查，并在报告的作者模型字段写明。基线只提供保护证据：不新增候选、不新增规则、不单独产生 finding，语料里查不到也不得据此升级为 `需修改`。
 
 ## Hard boundary
 
@@ -112,4 +112,6 @@ python scripts/extract_document.py <manuscript.docx> --output <extract.json>
 
 以 [assets/report-template.md](assets/report-template.md) 为骨架，并满足 [references/report-schema.md](references/report-schema.md)。完成前必须通过 `scripts/validate_report.py` 格式、溯源与账本一致性闸门，并单独完成语义复核。源稿、候选 JSON 和裁决账 JSON 必须一并传入。
 
-聚焦规则用扫描器 `--rules S1 S13` 等参数；聚焦章节先生成保留源 hash 与区块 ID 的范围提取 JSON，并在限制中声明范围。所有脚本路径相对 skill 安装目录；稿件、作者配置、基线和产物路径相对当前项目，调用时解析为明确路径。
+聚焦规则用扫描器 `--rules S1 S13` 等参数；聚焦章节先生成保留源 hash 与区块 ID 的范围提取 JSON，并在限制中声明范围。所有脚本路径相对 skill 安装目录；稿件、作者配置和产物路径相对当前项目，调用时解析为明确路径。基线固定在 skill 安装目录的 `corpus/BASELINE.md`；用户明确给出其他基线文件路径时用给定路径。
+
+触发与行为用例：[evals/cases.md](evals/cases.md)（每条在全新会话验证；脚本回归在 [tests/](tests/)）。
